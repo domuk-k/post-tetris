@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
-import Board from './Board';
 import { NEXT_BLOCK_SECTION } from 'utils/constants';
+import Board from 'feature/board/Board';
 
 const GameInfoSection = () => {
   return (
