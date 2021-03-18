@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import boardReducer from 'feature/board/boardSlice';
 import blockReducer from 'feature/block/blockSlice';
+import boardReducer from 'feature/board/boardSlice';
 
 const store = configureStore({
   reducer: {
-    board: boardReducer,
     block: blockReducer,
+    board: boardReducer,
   },
 });
 

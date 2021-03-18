@@ -1,36 +1,51 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectBoard, save, edit } from './boardSlice';
+import { selectBlock, move, next } from 'feature/block/blockSlice';
+import { selectBoard, write, save, gameover } from 'feature/board/boardSlice';
+import { useKeyDown } from 'hooks';
+import { readKey } from 'utils';
 
-const Board = ({ matrix }) => {
-  const { draft } = useSelector(selectBoard);
+const Board = () => {
+  const { draft, saved, hasToplineTouched } = useSelector(selectBoard);
+  const block = useSelector(selectBlock);
   const dispatch = useDispatch();
-  const bodyRef = useRef(document.body);
 
-  const moveBlock = useCallback(
+  const onKeyDown = useCallback(
     ({ key }) => {
-      dispatch(edit(key));
+      // validate key
+      dispatch(move({ info: readKey(key), matrix: saved }));
     },
-    [dispatch],
+    [dispatch, saved],
   );
 
-  useEffect(() => {
-    const target = bodyRef.current;
-    target.addEventListener('keydown', moveBlock);
-    return () => target.removeEventListener('keydown', moveBlock);
-  }, [moveBlock]);
+  const moveDown = useCallback(() => {
+    dispatch(move({ info: { axis: 'X', direction: 1 }, matrix: draft }));
+  }, [dispatch, draft]);
+
+  useKeyDown(onKeyDown);
 
   useEffect(() => {
-    /** edit matrix: put block on matrix right before render*/
-  });
+    dispatch(write(block));
+    if (block.settled) {
+      dispatch(save());
+      if (hasToplineTouched) {
+        dispatch(gameover());
+        return;
+      }
+      dispatch(next());
+    }
+  }, [block, dispatch, hasToplineTouched]);
+
+  useEffect(() => {}, [moveDown]);
 
   return (
     <Flex as="section" direction="column" margin="0 auto" alignItems="center">
-      {(matrix ?? draft).map((row, rowIndex) => (
+      {hasToplineTouched && <Heading>GAME OVER</Heading>}
+      {draft.map((row, rowIndex) => (
         <Flex direction="row" key={rowIndex}>
-          {row.map((cell, cellIndex) => (
-            <Cell key={cellIndex} isFilled={cell} />
+          {row.map(({ isFilled, color }, cellIndex) => (
+            <Cell key={cellIndex} isFilled={isFilled} color={color} />
           ))}
         </Flex>
       ))}
@@ -38,21 +53,20 @@ const Board = ({ matrix }) => {
   );
 };
 
-const Cell = ({ isFilled }) => {
-  const bgColor = isFilled ? 'dimgrey' : 'lightgrey';
-
+const Cell = ({ isFilled, color }) => {
+  const cellColor = isFilled ? color : 'lightgrey';
   return (
     <Box
       width="22px"
       height="22px"
       border="2px solid"
-      borderColor={bgColor}
+      borderColor={cellColor}
       padding="2px"
       margin="1px"
       _after={{
         content: `""`,
         display: 'block',
-        backgroundColor: bgColor,
+        backgroundColor: cellColor,
         height: '14px',
         width: '14px',
       }}
