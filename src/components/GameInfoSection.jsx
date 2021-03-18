@@ -4,17 +4,12 @@ import Board from 'feature/board/Board';
 
 const GameInfoSection = () => {
   return (
-    <Flex
-      as="section"
-      direction="column"
-      justifyContent="center"
-      textAlign="center"
-    >
+    <Flex as="section" direction="column" justifyContent="center" textAlign="center">
       <GameInfo label="Score">2021</GameInfo>
       <GameInfo label="Timer">01:33</GameInfo>
       <GameInfo label="Level">1</GameInfo>
       <GameInfo label="Next Block">
-        <Board matrix={NEXT_BLOCK_SECTION} />
+        {/* <Board matrix={NEXT_BLOCK_SECTION} /> */}
       </GameInfo>
     </Flex>
   );
