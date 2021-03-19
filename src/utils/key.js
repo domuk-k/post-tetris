@@ -4,7 +4,7 @@ const DIRECTIONS = {
   LEFT: 'Left',
 };
 
-export const readKey = keyName => {
+export const readArrowKey = keyName => {
   switch (keyName.replace('Arrow', '')) {
     case DIRECTIONS.DOWN:
       return { axis: 'Y', direction: +1 };
@@ -13,6 +13,6 @@ export const readKey = keyName => {
     case DIRECTIONS.RIGHT:
       return { axis: 'X', direction: 1 };
     default:
-      return { axis: 'Y', direction: -1 };
+      return { axis: 'Y', direction: 0 };
   }
 };

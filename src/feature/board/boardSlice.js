@@ -17,13 +17,11 @@ const boardSlice = createSlice({
     save: state => {
       state.saved = state.draft;
 
-      // check if top line touched
       if (state.draft[0].some(cell => cell.isFilled)) {
         state.hasToplineTouched = true;
         return;
       }
 
-      // any lines to clear? then clear.
       const clearedLineIndecies = state.saved.reduce(
         (acc, cur, rowIndex) =>
           cur.every(cell => cell.isFilled) ? [...acc, rowIndex] : acc,
@@ -32,7 +30,7 @@ const boardSlice = createSlice({
 
       if (clearedLineIndecies.length) {
         state.saved = state.saved.filter(
-          (row, rowIndex) => !clearedLineIndecies.includes(rowIndex),
+          (_, rowIndex) => !clearedLineIndecies.includes(rowIndex),
         );
         for (let i = 0; i < clearedLineIndecies.length; i++) {
           state.saved.unshift(

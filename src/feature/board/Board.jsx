@@ -1,76 +1,72 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
-import { useCallback, useEffect } from 'react';
+import { Flex, Heading } from '@chakra-ui/react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectBlock, move, next } from 'feature/block/blockSlice';
+import { selectBlock, move, next, moveStraightDown } from 'feature/block/blockSlice';
 import { selectBoard, write, save, gameover } from 'feature/board/boardSlice';
-import { useKeyDown } from 'hooks';
-import { readKey } from 'utils';
+import { addScore, selectLevelInfo } from 'feature/game/gameSlice';
+import { useAutoFall, useKeyDown, useMouseMoveControl } from 'hooks';
+import { readArrowKey } from 'utils';
+import Matrix from 'components/Matrix';
 
 const Board = () => {
   const { draft, saved, hasToplineTouched } = useSelector(selectBoard);
+  const { speed } = useSelector(selectLevelInfo);
   const block = useSelector(selectBlock);
   const dispatch = useDispatch();
+  const boardSectionRef = useMouseMoveControl(draft);
+
+  const moveDown = useCallback(() => {
+    dispatch(move({ info: { axis: 'Y', direction: 1 }, matrix: draft }));
+  }, [dispatch, draft]);
 
   const onKeyDown = useCallback(
-    ({ key }) => {
-      // validate key
-      dispatch(move({ info: readKey(key), matrix: saved }));
+    e => {
+      if (e.key.startsWith('Arrow')) {
+        dispatch(move({ info: readArrowKey(e.key), matrix: saved }));
+      } else if (e.keyCode === 32) dispatch(moveStraightDown({ matrix: saved }));
     },
     [dispatch, saved],
   );
 
-  const moveDown = useCallback(() => {
-    dispatch(move({ info: { axis: 'X', direction: 1 }, matrix: draft }));
-  }, [dispatch, draft]);
-
-  useKeyDown(onKeyDown);
+  useAutoFall(moveDown, speed);
+  const { removeKeyDownListener } = useKeyDown(onKeyDown);
 
   useEffect(() => {
     dispatch(write(block));
+
     if (block.settled) {
+      dispatch(addScore());
       dispatch(save());
       if (hasToplineTouched) {
         dispatch(gameover());
+        removeKeyDownListener();
         return;
       }
       dispatch(next());
     }
-  }, [block, dispatch, hasToplineTouched]);
-
-  useEffect(() => {}, [moveDown]);
+  }, [block, dispatch, hasToplineTouched, removeKeyDownListener]);
 
   return (
-    <Flex as="section" direction="column" margin="0 auto" alignItems="center">
-      {hasToplineTouched && <Heading>GAME OVER</Heading>}
-      {draft.map((row, rowIndex) => (
-        <Flex direction="row" key={rowIndex}>
-          {row.map(({ isFilled, color }, cellIndex) => (
-            <Cell key={cellIndex} isFilled={isFilled} color={color} />
-          ))}
-        </Flex>
-      ))}
+    <Flex
+      as="section"
+      direction="column"
+      margin="0 auto"
+      alignItems="center"
+      position="relative"
+      ref={boardSectionRef}
+    >
+      {hasToplineTouched && (
+        <Heading
+          position="absolute"
+          z-index="999"
+          top="50%"
+          transform="translate3d(0,-50%,0)"
+        >
+          GAME OVER
+        </Heading>
+      )}
+      <Matrix matrix={draft} isMainBoard />
     </Flex>
-  );
-};
-
-const Cell = ({ isFilled, color }) => {
-  const cellColor = isFilled ? color : 'lightgrey';
-  return (
-    <Box
-      width="22px"
-      height="22px"
-      border="2px solid"
-      borderColor={cellColor}
-      padding="2px"
-      margin="1px"
-      _after={{
-        content: `""`,
-        display: 'block',
-        backgroundColor: cellColor,
-        height: '14px',
-        width: '14px',
-      }}
-    />
   );
 };
 

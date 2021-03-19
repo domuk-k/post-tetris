@@ -1,4 +1,5 @@
-export { readKey } from './key';
+export { readArrowKey } from './key';
+export { format } from './format';
 export { range } from './range';
 export { MATRIX_SIZE, NEXT_BLOCK_SECTION } from './constants';
 export { getNextColor } from './getNextColor';

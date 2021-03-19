@@ -1,6 +1,5 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { getNextColor } from 'utils';
-import { boardSlice } from 'feature/board/boardSlice';
 
 const initialBlockShape = [
   [1, 1],
@@ -45,6 +44,15 @@ export const blockSlice = createSlice({
 
       state.position['offset' + axis] = state.position['offset' + axis] + direction;
     },
+    moveStraightDown: (state, action) => {
+      const { matrix } = action.payload;
+      const { axis, direction } = { axis: 'Y', direction: 1 };
+
+      while (isValidMovement(state, axis, direction, matrix)) {
+        state.position.offsetY += 1;
+      }
+      state.settled = true;
+    },
   },
 });
 
@@ -69,8 +77,10 @@ const isValidMovement = (block, axis, direction, matrix) => {
   return true;
 };
 
-export const { move, next } = blockSlice.actions;
+const { actions, reducer } = blockSlice;
+
+export const { move, next, moveStraightDown } = actions;
 
 export const selectBlock = state => state.block;
 
-export default blockSlice.reducer;
+export default reducer;
