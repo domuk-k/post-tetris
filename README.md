@@ -25,5 +25,5 @@ gotta push commits + cloud/physical backups..
 - clear lines when row get full
 - add features for each user input
   - move block by a cell as arrow button pressed
-  - move block straight down for space bar
-  - move block by a cell as mousemove on board
+  - move block straight down for space bar input
+  - move block by a cell as a mousemove event fires on board
