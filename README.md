@@ -12,9 +12,8 @@
 
 ## Day 3
 
-my Mac book pro broke up. commits are gone..
-gotta push commits + cloud/physical backups..
-
+my Mac book pro broke down. all commits are gone..
+gotta push commits + cloud/physical backups later on..
 - restart the project
 
 ## Day 4
