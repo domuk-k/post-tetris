@@ -2,7 +2,6 @@ import { Flex, Kbd } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { selectGame } from 'feature/game/gameSlice';
 import { NEXT_BLOCK_SECTION, format } from 'utils';
-import Board from 'feature/board/Board';
 import Matrix from './Matrix';
 
 const GameInfoSection = () => {

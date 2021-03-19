@@ -1,5 +1,5 @@
 import { Flex, Heading } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectBlock, move, next, moveStraightDown } from 'feature/block/blockSlice';
 import { selectBoard, write, save, gameover } from 'feature/board/boardSlice';
