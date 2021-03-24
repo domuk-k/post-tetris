@@ -1,7 +1,7 @@
 import { Flex, Kbd } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { selectGame } from 'feature/game/gameSlice';
-import { NEXT_BLOCK_SECTION, format } from 'utils';
+import { NEXT_BLOCK_SECTION, USRE_INTERFACES, format } from 'utils';
 import Matrix from './Matrix';
 
 const GameInfoSection = () => {
@@ -10,6 +10,7 @@ const GameInfoSection = () => {
     timer,
     levelInfo: { stage },
   } = useSelector(selectGame);
+
   return (
     <Flex as="section" direction="column" justifyContent="center" textAlign="center">
       <GameInfo label="Score">{score}</GameInfo>
@@ -18,12 +19,11 @@ const GameInfoSection = () => {
       <GameInfo label="Next Block">
         <Matrix matrix={NEXT_BLOCK_SECTION} />
       </GameInfo>
-      <GameInfo label="Interfaces">
+      <GameInfo label="user-interfaces">
         <Flex direction="column" w="80%" alignItems="center" margin="0 auto">
-          <Kbd>ArrowDown</Kbd>
-          <Kbd>ArrowLeft</Kbd>
-          <Kbd>ArrowRight</Kbd>
-          <Kbd>SpaceBar</Kbd>
+          {USRE_INTERFACES.map(name => (
+            <Kbd>{name}</Kbd>
+          ))}
           <div>and dummy mousemove</div>
         </Flex>
       </GameInfo>

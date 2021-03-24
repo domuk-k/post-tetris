@@ -14,7 +14,7 @@ const theme = extendTheme({
     }),
   },
   colors: {
-    cubes: 'B9B9B9',
+    cubes: '#B9B9B9',
   },
 });
 
