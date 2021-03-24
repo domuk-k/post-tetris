@@ -7,4 +7,6 @@ const MATRIX_SIZE = {
 
 const NEXT_BLOCK_SECTION = createTwoDimensionArray({ width: 4, height: 2 });
 
-export { MATRIX_SIZE, NEXT_BLOCK_SECTION };
+const USRE_INTERFACES = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'Spacebar'];
+
+export { MATRIX_SIZE, NEXT_BLOCK_SECTION, USRE_INTERFACES };
